@@ -1,9 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinearDataStructures", "LinearDataStructures\LinearDataStructures.csproj", "{0ED3CD50-271A-4790-BB8B-A12D49FE1CEF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistanceInLabirinth", "LinearDataStructures\DistanceInLabirinth.csproj", "{0ED3CD50-271A-4790-BB8B-A12D49FE1CEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SumAndAvg", "SumAndAvg\SumAndAvg.csproj", "{16162CC1-173B-4B6B-88A1-987832A573BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortWords", "SortWords\SortWords.csproj", "{B4A440F0-35DF-4F3E-BFF7-C037AA55E35D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LongestSubsequence", "LongestSubsequence\LongestSubsequence.csproj", "{490D045E-D892-450F-AD4F-C9C5A3804A7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveOddOccurences", "RemoveOddOccurences\RemoveOddOccurences.csproj", "{C003CF85-6FB8-48DF-8729-F640459D15DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountOccureance", "CountOccureance\CountOccureance.csproj", "{9A663DD4-220C-4A29-A515-C9D98C275D56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistInLabAuthor", "DistInLabAuthor\DistInLabAuthor.csproj", "{DA746A14-F937-4004-87AD-CC3697DA208D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +27,35 @@ Global
 		{0ED3CD50-271A-4790-BB8B-A12D49FE1CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ED3CD50-271A-4790-BB8B-A12D49FE1CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0ED3CD50-271A-4790-BB8B-A12D49FE1CEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16162CC1-173B-4B6B-88A1-987832A573BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16162CC1-173B-4B6B-88A1-987832A573BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16162CC1-173B-4B6B-88A1-987832A573BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16162CC1-173B-4B6B-88A1-987832A573BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4A440F0-35DF-4F3E-BFF7-C037AA55E35D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4A440F0-35DF-4F3E-BFF7-C037AA55E35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4A440F0-35DF-4F3E-BFF7-C037AA55E35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4A440F0-35DF-4F3E-BFF7-C037AA55E35D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{490D045E-D892-450F-AD4F-C9C5A3804A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{490D045E-D892-450F-AD4F-C9C5A3804A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{490D045E-D892-450F-AD4F-C9C5A3804A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{490D045E-D892-450F-AD4F-C9C5A3804A7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C003CF85-6FB8-48DF-8729-F640459D15DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C003CF85-6FB8-48DF-8729-F640459D15DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C003CF85-6FB8-48DF-8729-F640459D15DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C003CF85-6FB8-48DF-8729-F640459D15DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A663DD4-220C-4A29-A515-C9D98C275D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A663DD4-220C-4A29-A515-C9D98C275D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A663DD4-220C-4A29-A515-C9D98C275D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A663DD4-220C-4A29-A515-C9D98C275D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA746A14-F937-4004-87AD-CC3697DA208D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA746A14-F937-4004-87AD-CC3697DA208D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA746A14-F937-4004-87AD-CC3697DA208D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA746A14-F937-4004-87AD-CC3697DA208D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4FA351DD-DE4A-4005-90E3-7D85C1271084}
 	EndGlobalSection
 EndGlobal
