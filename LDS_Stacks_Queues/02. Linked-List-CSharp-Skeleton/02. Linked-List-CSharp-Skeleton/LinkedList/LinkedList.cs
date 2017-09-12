@@ -6,17 +6,17 @@ public class LinkedList<T> : IEnumerable<T>
 {
     public int Count { get; private set; }
 
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
 
     public void AddFirst(T item)
     {
-        Node oldHead = this.head;
+        Node<T> oldHead = this.head;
 
-        this.head=new Node(item);
+        this.head = new Node<T>(item);
         this.head.Next = oldHead;
 
-        if (this.Count==0)
+        if (this.Count == 0)
         {
             this.tail = this.head;
         }
@@ -26,10 +26,10 @@ public class LinkedList<T> : IEnumerable<T>
 
     public void AddLast(T item)
     {
-        Node oldTail = this.tail;
-        
-        this.tail=new Node(item);
-       
+        Node<T> oldTail = this.tail;
+
+        this.tail = new Node<T>(item);
+
         if (this.Count == 0)
         {
             this.head = this.tail;
@@ -44,18 +44,18 @@ public class LinkedList<T> : IEnumerable<T>
 
     public T RemoveFirst()
     {
-        
-        if (this.Count==0)
+
+        if (this.Count == 0)
         {
             throw new InvalidOperationException();
         }
-        Node oldHead = this.head;
+        Node<T> oldHead = this.head;
 
         this.head = this.head.Next;
 
         this.Count--;
 
-        if (this.Count==0)
+        if (this.Count == 0)
         {
             this.tail = null;
         }
@@ -66,12 +66,12 @@ public class LinkedList<T> : IEnumerable<T>
     public T RemoveLast()
     {
 
-        if (this.Count==0)
+        if (this.Count == 0)
         {
             throw new InvalidOperationException();
         }
 
-        Node oldTail = this.tail;
+        Node<T> oldTail = this.tail;
 
         if (this.Count == 1)
         {
@@ -79,7 +79,7 @@ public class LinkedList<T> : IEnumerable<T>
         }
         else
         {
-            Node newTail = this.GetBeforeLastNode();
+            Node<T> newTail = this.GetBeforeLastNode();
             newTail.Next = null;
             this.tail = newTail;
 
@@ -90,10 +90,10 @@ public class LinkedList<T> : IEnumerable<T>
         return oldTail.Value;
     }
 
-    private Node GetBeforeLastNode()
+    private Node<T> GetBeforeLastNode()
     {
-        Node current = this.head;
-        while (current.Next!=this.tail)
+        Node<T> current = this.head;
+        while (current.Next != this.tail)
         {
             current = current.Next;
         }
@@ -103,9 +103,9 @@ public class LinkedList<T> : IEnumerable<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        Node current = this.head;
+        Node<T> current = this.head;
 
-        while (current!=null)
+        while (current != null)
         {
             yield return current.Value;
             current = current.Next;
@@ -117,16 +117,28 @@ public class LinkedList<T> : IEnumerable<T>
         return this.GetEnumerator();
     }
 
-    private class Node 
+    private class Node<T>
     {
-       
+        private T value;
+        private Node<T> next;
+
         public Node(T value)
         {
-            this.Value = value;
+            this.value = value;
+          
         }
 
-        public T Value { get; set; }
-        public Node Next { get; set; }
+        public T Value
+        {
+            get { return this.value; }
+            set { this.value = value; }
+        }
+
+        public Node<T> Next
+        {
+            get { return this.next; }
+            set { this.next = value; }
+        }
     }
 
 }
