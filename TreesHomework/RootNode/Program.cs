@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Security.Cryptography.X509Certificates;
 
     public class Program
     {
@@ -38,12 +39,43 @@
 
             //problem8 AllSubTreeWithGivenSum
 
-            foreach (var node in GetSubtreeWithSum(root))
+            //foreach (var node in GetSubtreeWithSum(root))
+            //{
+            //    PrintPreOrder(node);
+            //    Console.WriteLine();
+            //}
+
+            //problem6 LongestPath
+            var deepestLeftMost = GetDeepestNode(GetDeepestNodeWithBFS(root));
+            var longestPath= new List<int>();
+            var node = deepestLeftMost;
+            while (node.Parent!=null)
             {
-                PrintPreOrder(node);
-                Console.WriteLine();
+                longestPath.Add(node.Value);
+                node = node.Parent;
             }
+            longestPath.Add(root.Value);
+            longestPath.Reverse();
+            Console.WriteLine("Longest path: "+string.Join(" ",longestPath));
+
+        }
+
+        private static Tree<int> GetDeepestNodeWithBFS(Tree<int> root)
+        {
+            var q = new Queue<Tree<int>>();
+            q.Enqueue(root);
+            Tree<int> current = null;
             
+            while (q.Count > 0)
+            {
+                current = q.Dequeue();
+                for (int i = current.Children.Count - 1; i >= 0; i--)
+                {
+                    q.Enqueue(current.Children[i]);
+                }
+            }
+
+            return current;
         }
 
         private static void PrintPreOrder(Tree<int> node)
