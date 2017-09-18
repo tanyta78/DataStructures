@@ -5,6 +5,88 @@ public class BinarySearchTree<T> : IBinarySearchTree<T> where T:IComparable
 {
     private Node root;
 
+    private void PreOrderCopy(Node node)
+    {
+        if (node == null)
+        {
+            return;
+        }
+
+        this.Insert(node.Value);
+        this.PreOrderCopy(node.Left);
+        this.PreOrderCopy(node.Right);
+    }
+
+    public void Insert(T element)
+    {
+        this.root = this.Insert(element, this.root);
+
+    }
+    
+    private Node Insert(T element, Node node)
+    {
+        if (node == null)
+        {
+            node = new Node(element);
+        }
+        else if (element.CompareTo(node.Value) < 0)
+        {
+            node.Left = this.Insert(element, node.Left);
+            
+        }
+        else if (element.CompareTo(node.Value) > 0)
+        {
+            node.Right = this.Insert(element, node.Right);
+            
+        }
+
+        node.Count = 1 + this.Count(node.Left) + this.Count(node.Right);
+
+        return node;
+    }
+
+    private BinarySearchTree(Node node)
+    {
+        this.PreOrderCopy(node);
+    }
+
+    public BinarySearchTree()
+    {
+    }
+    
+    
+    public bool Contains(T element)
+    {
+        Node current = this.FindElement(element);
+
+        return current != null;
+    }
+
+    public void EachInOrder(Action<T> action)
+    {
+        this.EachInOrder(this.root, action);
+    }
+
+    private void EachInOrder(Node node, Action<T> action)
+    {
+        if (node == null)
+        {
+            return;
+        }
+
+        this.EachInOrder(node.Left, action);
+        action(node.Value);
+        this.EachInOrder(node.Right, action);
+    }
+
+
+    public BinarySearchTree<T> Search(T element)
+    {
+        Node current = this.FindElement(element);
+
+        return new BinarySearchTree<T>(current);
+    }
+
     private Node FindElement(T element)
     {
         Node current = this.root;
@@ -27,35 +109,62 @@ public class BinarySearchTree<T> : IBinarySearchTree<T> where T:IComparable
 
         return current;
     }
-
-    private void PreOrderCopy(Node node)
+    
+    public void DeleteMin()
     {
-        if (node == null)
-        {
-            return;
-        }
+       this.root = this.DeleteMin(this.root);
 
-        this.Insert(node.Value);
-        this.PreOrderCopy(node.Left);
-        this.PreOrderCopy(node.Right);
+        //if (this.root == null)
+        //{
+        //    return;
+        //}
+
+        //Node current = this.root;
+        //Node parent = null;
+        //while (current.Left != null)
+        //{
+        //    parent = current;
+        //    current = current.Left;
+        //}
+
+        //if (parent == null)
+        //{
+        //    this.root = this.root.Right;
+        //}
+        //else
+        //{
+        //    parent.Left = current.Right;
+        //}
     }
 
-    private Node Insert(T element, Node node)
+    private Node DeleteMin(Node node)
     {
-        if (node == null)
+        if (this.root == null)
         {
-            node = new Node(element);
-        }
-        else if (element.CompareTo(node.Value) < 0)
-        {
-            node.Left = this.Insert(element, node.Left);
-        }
-        else if (element.CompareTo(node.Value) > 0)
-        {
-            node.Right = this.Insert(element, node.Right);
+            throw new InvalidOperationException();
         }
 
+        if (node.Left == null)
+        {
+            return node.Right;
+        }
+
+        node.Left = this.DeleteMin(node.Left);
+
+        node.Count=node.Count-1;
+
         return node;
+
+
+    }
+
+    public IEnumerable<T> Range(T startRange, T endRange)
+    {
+        Queue<T> queue = new Queue<T>();
+
+        this.Range(this.root, queue, startRange, endRange);
+
+        return queue;
     }
 
     private void Range(Node node, Queue<T> queue, T startRange, T endRange)
@@ -81,131 +190,244 @@ public class BinarySearchTree<T> : IBinarySearchTree<T> where T:IComparable
             this.Range(node.Right, queue, startRange, endRange);
         }
     }
-    
-    private void EachInOrder(Node node, Action<T> action)
-    {
-        if (node == null)
-        {
-            return;
-        }
 
-        this.EachInOrder(node.Left, action);
-        action(node.Value);
-        this.EachInOrder(node.Right, action);
-    }
-
-    private BinarySearchTree(Node node)
-    {
-        this.PreOrderCopy(node);
-    }
-
-    public BinarySearchTree()
-    {
-    }
-    
-    public void Insert(T element)
-    {
-        this.root = this.Insert(element, this.root);
-    }
-    
-    public bool Contains(T element)
-    {
-        Node current = this.FindElement(element);
-
-        return current != null;
-    }
-
-    public void EachInOrder(Action<T> action)
-    {
-        this.EachInOrder(this.root, action);
-    }
-
-    public BinarySearchTree<T> Search(T element)
-    {
-        Node current = this.FindElement(element);
-
-        return new BinarySearchTree<T>(current);
-    }
-
-    public void DeleteMin()
-    {
-        if (this.root == null)
-        {
-            return;
-        }
-
-        Node current = this.root;
-        Node parent = null;
-        while (current.Left != null)
-        {
-            parent = current;
-            current = current.Left;
-        }
-
-        if (parent == null)
-        {
-            this.root = this.root.Right;
-        }
-        else
-        {
-            parent.Left = current.Right;
-        }
-    }
-
-    public IEnumerable<T> Range(T startRange, T endRange)
-    {
-        Queue<T> queue = new Queue<T>();
-
-        this.Range(this.root, queue, startRange, endRange);
-
-        return queue;
-    }
 
     public void Delete(T element)
     {
-        throw new NotImplementedException();
+        if (this.root == null || !this.Contains(element))
+        {
+            throw new InvalidOperationException();
+        }
+
+        this.root = this.Delete(element, this.root);
+    }
+
+    private Node Delete(T element,Node node)
+    {
+        if (node == null)
+        {
+            return null;
+        }
+
+        int compare = element.CompareTo(node.Value);
+
+        if (compare < 0)
+        {
+            node.Left = this.Delete(element, node.Left);
+        }
+        else if (compare > 0)
+        {
+            node.Right = this.Delete(element, node.Right);
+        }
+        else
+        {
+            if (node.Left == null)
+            {
+                return node.Right;
+            }
+            else if (node.Right == null)
+            {
+                return node.Left;
+            }
+
+            node.Value = this.MinValue(node.Right);
+
+            node.Right = this.Delete(node.Value, node.Right);
+        }
+
+        return node;
+    }
+
+    private T MinValue(Node node)
+    {
+        T minValue = node.Value;
+        while (node.Left != null)
+        {
+            minValue = node.Left.Value;
+            node = node.Left;
+        }
+
+        return minValue;
     }
 
     public void DeleteMax()
     {
-        throw new NotImplementedException();
+       this.root = this.DeleteMax(this.root);
+    }
+
+    private Node DeleteMax(Node node)
+    {
+        if (this.root == null)
+        {
+            throw new InvalidOperationException();
+        }
+
+
+        if (node.Right == null)
+        {
+            return node.Left;
+        }
+
+        node.Right = this.DeleteMax(node.Right);
+
+        node.Count=node.Count-1;
+
+        return node;
     }
 
     public int Count()
     {
-        throw new NotImplementedException();
+        return this.Count(this.root);
+    }
+
+    private int Count(Node node)
+    {
+        if (node==null)
+        {
+            return 0;
+        }
+
+        return node.Count;
     }
 
     public int Rank(T element)
     {
-        throw new NotImplementedException();
+        return this.Rank(element,this.root);
+    }
+
+    private int Rank(T element, Node node)
+    {
+        if (node==null)
+        {
+            return 0;
+        }
+
+        int compare = element.CompareTo(node.Value);
+
+        if (compare<0)
+        {
+            return this.Rank(element, node.Left);
+        }
+
+        if (compare>0)
+        {
+            return 1 + this.Count(node.Left) + this.Rank(element, node.Right);
+        }
+
+        return this.Count(node.Left);
     }
 
     public T Select(int rank)
     {
-        throw new NotImplementedException();
+        T searchedElement = this.Select(this.root, rank);
+        return searchedElement;
+    }
+
+    private T Select(Node node, int rank)
+    {
+        if (node==null || this.root.Count<rank)
+        {
+           throw new InvalidOperationException();
+        }
+        int compare = rank.CompareTo(this.Rank(node.Value));
+
+        if (compare<0)
+        {
+            return this.Select(node.Left, rank);
+        }
+
+        if (compare>0)
+        {
+            return this.Select(node.Right, rank);
+        }
+
+        return node.Value;
     }
 
     public T Ceiling(T element)
     {
-        throw new NotImplementedException();
+        Node result = this.Ceiling(element, this.root);
+
+        if (result==null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        return result.Value;
+    }
+
+    private Node Ceiling(T element, Node node)
+    {
+        if (node==null)
+        {
+            return null;
+        }
+
+        int comapare = node.Value.CompareTo(element);
+
+        if (comapare <= 0)
+        {
+            return this.Ceiling(element, node.Right);
+        }
+
+        Node temp = this.Ceiling(element, node.Left);
+        if (temp == null)
+        {
+            return node;
+        }
+
+        return temp;
     }
 
     public T Floor(T element)
     {
-        throw new NotImplementedException();
+        Node result = this.Floor(element, this.root);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException();
+        }
+        return result.Value;
+    }
+
+    private Node Floor(T element, Node node)
+    {
+        if (node == null)
+        {
+            return null;
+        }
+
+        int compare = node.Value.CompareTo(element);
+
+        if (compare >= 0)
+        {
+            return this.Floor(element, node.Left);
+        }
+
+        Node temp = this.Floor(element, node.Right);
+        if (temp == null)
+        {
+            return node;
+        }
+        return temp;
     }
 
     private class Node
     {
         public Node(T value)
         {
+            if (value==null)
+            {
+                throw new ArgumentException("Cannot insert null value!");
+            }
             this.Value = value;
-        }
+           }
 
-        public T Value { get; }
+        public T Value { get; set; }
         public Node Left { get; set; }
         public Node Right { get; set; }
+       
+        public int Count { get; set; }
     }
 }
 
@@ -226,7 +448,15 @@ public class Launcher
         bst.Insert(39);
         bst.Insert(45);
 
-        bst.EachInOrder(Console.WriteLine);
-        
+       // bst.EachInOrder(Console.WriteLine);
+        //int nodeCount = bst.Count();
+        //System.Console.WriteLine(nodeCount);
+       // bst.DeleteMin();
+       //bst.DeleteMax();
+       // Console.WriteLine(bst.Count());
+       // bst.EachInOrder(Console.WriteLine);
+        int rank = bst.Select(8);
+        Console.WriteLine(rank);
+
     }
 }
