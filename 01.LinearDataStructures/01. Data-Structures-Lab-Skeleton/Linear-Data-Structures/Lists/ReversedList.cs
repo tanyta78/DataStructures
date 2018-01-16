@@ -33,7 +33,7 @@ public class ReversedList<T>:IEnumerable<T>
         {
             index = this.Count - index - 1;
 
-            if (index >= this.Count)
+            if (index < 0 || index >= this.Count)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -65,11 +65,9 @@ public class ReversedList<T>:IEnumerable<T>
     private void Resize()
     {
         T[] newReversedList = new T[this.data.Length * 2];
+
         Array.Copy(this.data, newReversedList, this.Count);
-        //for (int i = 0; i < this.data.Length; i++)
-        // {
-        //   newReversedList[i] = this.data[i];
-        //}
+       
         this.data = newReversedList;
     }
 
@@ -106,24 +104,18 @@ public class ReversedList<T>:IEnumerable<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        int br = this.Count - 1;
+        int index = this.Count - 1;
 
-        while (br >= 0)
+        while (index >= 0)
         {
-            yield return this.data[br];
-            br--;
+            yield return this.data[index];
+            index--;
         }
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        int br = this.Count - 1;
-
-        while (br >= 0)
-        {
-            yield return this.data[br - 1];
-            br--;
-        }
+        return this.GetEnumerator();
     }
 }
 
