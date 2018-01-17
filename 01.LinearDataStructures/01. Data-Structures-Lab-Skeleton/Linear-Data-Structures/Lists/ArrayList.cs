@@ -7,14 +7,17 @@
 //Be sure to test implemented operations whenever possible before moving to the next
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
-public class ArrayList<T>
+public class ArrayList<T>:IEnumerable<T>
 {
+    private const int InitialCapacity = 2;
     private T[] data;
 
     public ArrayList()
     {
-        this.data = new T[2];
+        this.data = new T[InitialCapacity];
     }
 
     public int Count
@@ -23,10 +26,30 @@ public class ArrayList<T>
         private set;
     }
 
- 
+    public T this[int index]
+    {
+        get
+        {
+            if (index >= this.Count || index < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            return this.data[index];
+        }
+
+        set
+        {
+            if (index >= this.Count || index < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            this.data[index] = value;
+        }
+    }
+
     public void Add(T item)
     {
-        if (this.data.Length <= this.Count)
+        if (this.data.Length == this.Count)
         {
             this.Resize();
         }
@@ -55,6 +78,7 @@ public class ArrayList<T>
         }
 
         this.Count--;
+
         if (this.Count <= this.data.Length / 4)
         {
             this.Shrink();
@@ -66,7 +90,24 @@ public class ArrayList<T>
     private void Shrink()
     {
         T[] newArr = new T[this.data.Length / 2];
-        Array.Copy(this.data,newArr,this.Count);
+        Array.Copy(this.data, newArr, this.Count);
         this.data = newArr;
+    }
+
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        int index =0;
+
+        while (index <= this.Count - 1)
+        {
+            yield return this.data[index];
+            index++;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this.GetEnumerator();
     }
 }
