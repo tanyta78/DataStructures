@@ -19,10 +19,7 @@
             int n = int.Parse(Console.ReadLine());
             var result = new Queue<int>();
 
-            var sequance = new List<int>
-            {
-                n
-            };
+            var sequance = new List<int>{n};
 
             result.Enqueue(n);
 
