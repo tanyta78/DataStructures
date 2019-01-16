@@ -47,6 +47,12 @@ public class BinarySearchTree<T> where T : IComparable<T>
 
     public void Insert(T value)
     {
+        //recurcive insert
+
+        this.root = this.Insert(this.root, value);
+
+        //iterative insert
+/*
         if (this.root == null)
         {
             this.root = new Node(value);
@@ -84,11 +90,13 @@ public class BinarySearchTree<T> where T : IComparable<T>
         {
             parent.Right = newNode;
         }
+        */
     }
 
-    public bool Contains(T value)
+    public bool Contains(T value) 
     {
         Node current = this.root;
+
         while (current != null)
         {
             if (value.CompareTo(current.Value) > 0)
@@ -101,11 +109,11 @@ public class BinarySearchTree<T> where T : IComparable<T>
             }
             else
             {
-                break;
+                return true;
             }
         }
 
-        return current != null;
+        return false;
     }
 
     public void DeleteMin()
@@ -173,7 +181,7 @@ public class BinarySearchTree<T> where T : IComparable<T>
 
     private void Range(Node node, Queue<T> queue, T startRange, T endRange)
     {
-        if (node==null)
+        if (node == null)
         {
             return;
         }
@@ -209,6 +217,28 @@ public class BinarySearchTree<T> where T : IComparable<T>
         this.EachInOrder(node.Left, action);
         action(node.Value);
         this.EachInOrder(node.Right, action);
+    }
+
+    //recursive insert
+    private Node Insert(Node node, T value)
+    {
+        if (node == null)
+        {
+            return new Node(value);
+        }
+
+        int compare = node.Value.CompareTo(value);
+
+        if (compare > 0)
+        {
+            node.Left = this.Insert(node.Left, value);
+        }
+        else if (compare < 0)
+        {
+            node.Right = this.Insert(node.Right, value);
+        }
+
+        return node;
     }
 }
 
