@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BinarySearchTree;
 
 public class BinarySearchTree<T> : IBinarySearchTree<T> where T : IComparable
 {
@@ -458,7 +459,7 @@ public class Launcher
 {
     public static void Main(string[] args)
     {
-        BinarySearchTree<int> bst = new BinarySearchTree<int>();
+        BinarySTree<int> bst = new BinarySTree<int>();
 
         bst.Insert(10);
         bst.Insert(5);
@@ -471,10 +472,17 @@ public class Launcher
         bst.Insert(39);
         bst.Insert(45);
 
+
+        BinarySTree<int> search = bst.Search(5);
+        search.Insert(50);
+
+        Console.WriteLine(bst.Contains(50));
+        bst.EachInOrder(Console.WriteLine);
+
+        Console.WriteLine("============================");
        
-       // bst.EachInOrder(Console.WriteLine);
-       
-        Console.WriteLine(bst.Select(4));
+        Console.WriteLine(search.Contains(50));
+        search.EachInOrder(Console.WriteLine);
 
     }
 }

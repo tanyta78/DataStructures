@@ -16,7 +16,7 @@ public class BinaryTree<T>
 
     public void PrintIndentedPreOrder(int indent = 0)
     {
-        //Pre-order== root node, left child, rigth child
+        //Pre-order== root node, left child, right  child
         Console.Write(new string(' ', 2 * indent));
         Console.WriteLine(this.Value);
         if (this.LeftChild != null)
@@ -31,7 +31,7 @@ public class BinaryTree<T>
 
     public void EachInOrder(Action<T> action)
     {
-        // In-order == leftchild, root, rigth child
+        // In-order == left child, root, right child
         if (this.LeftChild != null)
         {
             this.LeftChild.EachInOrder(action);
@@ -47,7 +47,7 @@ public class BinaryTree<T>
 
     public void EachPostOrder(Action<T> action)
     {
-        // Post-order == leftchild,  rigth child, root
+        // Post-order == left child,  right child, root
 
         if (this.LeftChild != null)
         {

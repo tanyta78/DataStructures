@@ -10,6 +10,8 @@ public class Tree<T>
     public Tree(T value, params Tree<T>[] children)
     {
         this.Value = value;
+       // this.Children = new List<Tree<T>>(children);
+
         this.Children = new List<Tree<T>>();
 
         foreach (var child in children)
@@ -32,8 +34,6 @@ public class Tree<T>
     {
         action(this.Value);
 
-        //for each child node invoke child.Each(action)
-
         foreach (var child in this.Children)
         {
             child.Each(action);
@@ -45,6 +45,28 @@ public class Tree<T>
         var result = new List<T>();
         this.DFS(this, result);
         return result;
+    }
+
+    public IEnumerable<T> OrderDfsWithStack()
+    {
+        var result = new Stack<T>();
+       
+        var stack = new Stack<Tree<T>>();
+        stack.Push(this);
+
+        while (stack.Count>0)
+        {
+            var current = stack.Pop();
+
+            foreach (var child in current.Children)
+            {
+                stack.Push(child);
+            }
+
+            result.Push(current.Value);
+        }
+        
+        return result.ToArray();
     }
 
     private void DFS(Tree<T> tree, List<T> result)
