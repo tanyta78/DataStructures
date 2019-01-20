@@ -121,16 +121,68 @@
 
         }
 
-        public IEnumerable<T> Range(T startRange, T endRange)
-        {
-            return null;
-        }
 
         public void DeleteMin()
         {
+            if (this.root == null)
+            {
+                return;
+            }
+
+            Node current = this.root;
+            Node parent = null;
+            while (current.Left != null)
+            {
+                parent = current;
+                current = current.Left;
+            }
+
+            if (parent == null)
+            {
+                this.root = this.root.Right;
+            }
+            else
+            {
+                parent.Left = current.Right;
+            }
 
         }
 
+        //==============Recursive ==========================
+
+
+        public IEnumerable<T> Range(T startRange, T endRange)
+        {
+            var result = new List<T>();
+
+            this.Range(this.root, result, startRange, endRange);
+
+            return result ;
+        }
+
+        private void Range(Node node, List<T> result, T startRange, T endRange)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            var compareLow = node.Value.CompareTo(startRange);
+            var compareHigh = node.Value.CompareTo(endRange);
+
+            if (compareLow > 0)
+            {
+                this.Range(node.Left, result, startRange, endRange);
+            }
+            if (compareLow >= 0 && compareHigh <= 0)
+            {
+                result.Add(node.Value);
+            }
+            if (compareHigh < 0)
+            {
+                this.Range(node.Right, result, startRange, endRange);
+            }
+        }
 
         public void EachInOrder(Action<T> action)
         {
