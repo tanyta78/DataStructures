@@ -10,10 +10,7 @@ public class BinaryHeap<T> where T : IComparable<T>
         this.heap = new List<T>();
     }
 
-    public int Count
-    {
-        get { return this.heap.Count; }
-    }
+    public int Count => this.heap.Count;
 
     public void Insert(T item)
     {
@@ -22,15 +19,15 @@ public class BinaryHeap<T> where T : IComparable<T>
         this.HeapifyUp(this.heap.Count - 1);
     }
 
-    private void HeapifyUp(int index)
+    private void HeapifyUp(int newElementIndex)
     {
-        int parent = (index - 1) / 2;
+        int parentIndex = (newElementIndex - 1) / 2;
 
-        while (this.IsGreater(index, parent))
+        while (this.IsGreater(newElementIndex, parentIndex))
         {
-            this.Swap(index, parent);
-            index = parent;
-            parent = (index - 1) / 2;
+            this.Swap(newElementIndex, parentIndex);
+            newElementIndex = parentIndex;
+            parentIndex = (newElementIndex - 1) / 2;
         }
 
     }
@@ -59,39 +56,41 @@ public class BinaryHeap<T> where T : IComparable<T>
 
     public T Pull()
     {
-        if (this.heap.Count <=0)
+        if (this.heap.Count <= 0)
         {
             throw new InvalidOperationException();
         }
 
         T result = this.heap[0];
-        this.Swap(0,this.Count-1);
+        this.Swap(0, this.Count - 1);
         this.heap.RemoveAt(this.Count - 1);
         this.HeapifyDown(0);
-        
+
 
         return result;
     }
 
     private void HeapifyDown(int index)
     {
-        while (index < this.Count/2)
+        while (index < this.Count / 2)
         {
-            int child = 2 * index + 1;
+            int leftChild = 2 * index + 1;
+            int rightChild = leftChild + 1;
+            int biggerChild = leftChild;
 
-            if (child+1<this.Count && this.IsGreater(child+1,child))
+            if (rightChild < this.Count && this.IsGreater(rightChild, leftChild))
             {
-                child++;
+                biggerChild++;
             }
 
-            if (this.IsGreater(index,child))
+            if (this.IsGreater(index, biggerChild))
             {
                 break;
             }
 
-            this.Swap(child,index);
+            this.Swap(biggerChild, index);
 
-            index = child;
+            index = biggerChild;
         }
     }
 }
