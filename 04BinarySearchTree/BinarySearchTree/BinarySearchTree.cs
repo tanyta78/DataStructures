@@ -53,6 +53,31 @@ public class BinarySearchTree<T> : IBinarySearchTree<T> where T : IComparable
         return node;
     }
 
+
+    public void EachInOrder(Action<T> action)
+    {
+        this.EachInOrder(this.root, action);
+    }
+
+    private void EachInOrder(Node node, Action<T> action)
+    {
+        if (node == null)
+        {
+            return;
+        }
+
+        this.EachInOrder(node.Left, action);
+        action(node.Value);
+        this.EachInOrder(node.Right, action);
+    }
+    
+    public BinarySearchTree<T> Search(T element)
+    {
+        Node current = this.FindElement(element);
+
+        return new BinarySearchTree<T>(current);
+    }
+
     public bool Contains(T element)
     {
         Node current = this.FindElement(element);
@@ -81,30 +106,6 @@ public class BinarySearchTree<T> : IBinarySearchTree<T> where T : IComparable
         }
 
         return current;
-    }
-
-    public void EachInOrder(Action<T> action)
-    {
-        this.EachInOrder(this.root, action);
-    }
-
-    private void EachInOrder(Node node, Action<T> action)
-    {
-        if (node == null)
-        {
-            return;
-        }
-
-        this.EachInOrder(node.Left, action);
-        action(node.Value);
-        this.EachInOrder(node.Right, action);
-    }
-    
-    public BinarySearchTree<T> Search(T element)
-    {
-        Node current = this.FindElement(element);
-
-        return new BinarySearchTree<T>(current);
     }
 
     public void DeleteMin()
@@ -225,8 +226,7 @@ public class BinarySearchTree<T> : IBinarySearchTree<T> where T : IComparable
 
     public void DeleteMax()
     {
-        //recursive
-        this.root = this.DeleteMax(this.root);
+      this.root = this.DeleteMax(this.root);
 
         //iterative
         //if (this.root == null)
@@ -363,9 +363,9 @@ public class BinarySearchTree<T> : IBinarySearchTree<T> where T : IComparable
             return null;
         }
 
-        int comapare = node.Value.CompareTo(element);
+        int compare = node.Value.CompareTo(element);
 
-        if (comapare <= 0)
+        if (compare <= 0)
         {
             return this.Ceiling(element, node.Right);
         }

@@ -120,8 +120,7 @@
             return new BinarySTree<T>(current);
 
         }
-
-
+        
         public void DeleteMin()
         {
             if (this.root == null)
@@ -144,6 +143,32 @@
             else
             {
                 parent.Left = current.Right;
+            }
+
+        }
+
+        public void DeleteMax()
+        {
+            if (this.root == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            Node current = this.root;
+            Node parent = null;
+            while (current.Right != null)
+            {
+                parent = current;
+                current = current.Right;
+            }
+
+            if (parent == null)
+            {
+                this.root = this.root.Left;
+            }
+            else
+            {
+                parent.Right = current.Left;
             }
 
         }
