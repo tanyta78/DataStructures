@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
 {
+    private const bool Red = true;
+    private const bool Black = false;
+
     private Node root;
 
     private Node FindElement(T element)
@@ -44,7 +47,7 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
     {
         if (node == null)
         {
-            node = new Node(element);
+            node = new Node(element, Red);
         }
         else if (element.CompareTo(node.Value) < 0)
         {
@@ -53,6 +56,19 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
         else if (element.CompareTo(node.Value) > 0)
         {
             node.Right = this.Insert(element, node.Right);
+        }
+
+        if (this.IsRed(node.Right) && !this.IsRed(node.Left))
+        {
+            node = this.RotateLeft(node);
+        }
+        if (this.IsRed(node.Left) && this.IsRed(node.Left.Left))
+        {
+            node = this.RotateRight(node);
+        }
+        if (this.IsRed(node.Right) && this.IsRed(node.Left))
+        {
+           this.FlipColors(node);
         }
 
         node.Count = 1 + this.Count(node.Left) + this.Count(node.Right);
@@ -117,6 +133,7 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
     public void Insert(T element)
     {
         this.root = this.Insert(element, this.root);
+        this.root.Color = Black;
     }
 
     public bool Contains(T element)
@@ -319,7 +336,6 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
 
     public T Ceiling(T element)
     {
-
         return this.Select(this.Rank(element) + 1);
     }
 
@@ -328,11 +344,60 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
         return this.Select(this.Rank(element) - 1);
     }
 
+    private bool IsRed(Node node)
+    {
+        if (node == null)
+        {
+            return false;
+        }
+
+        return node.Color == Red;
+
+    }
+
+    private void FlipColors(Node node)
+    {
+        node.Color = Red;
+        node.Left.Color = Black;
+        node.Right.Color = Black;
+    }
+
+    private Node RotateLeft(Node node)
+    {
+        Node subTreeRoot = node.Right;
+        node.Right = subTreeRoot.Left;
+        subTreeRoot.Left = node;
+
+        subTreeRoot.Color = node.Color;
+        node.Color = Red;
+
+        subTreeRoot.Count = node.Count;
+        node.Count = 1 + this.Count(node.Left) + this.Count(node.Right);
+
+        return subTreeRoot;
+    }
+
+    private Node RotateRight(Node node)
+    {
+        Node subTreeRoot = node.Left;
+        node.Left = subTreeRoot.Right;
+        subTreeRoot.Right = node;
+
+        subTreeRoot.Color = node.Color;
+        node.Color = Red;
+
+        subTreeRoot.Count = node.Count;
+        node.Count = 1 + this.Count(node.Left) + this.Count(node.Right);
+
+        return subTreeRoot;
+    }
+
     private class Node
     {
-        public Node(T value)
+        public Node(T value, bool color)
         {
             this.Value = value;
+            this.Color = color;
         }
 
         public T Value { get; }
@@ -340,6 +405,7 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
         public Node Right { get; set; }
 
         public int Count { get; set; }
+        public bool Color { get; set; }
     }
 
 }
