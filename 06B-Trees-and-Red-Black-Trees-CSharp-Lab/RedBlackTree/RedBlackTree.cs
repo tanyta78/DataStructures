@@ -47,7 +47,7 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
     {
         if (node == null)
         {
-            node = new Node(element, Red);
+            node = new Node(element);
         }
         else if (element.CompareTo(node.Value) < 0)
         {
@@ -68,7 +68,7 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
         }
         if (this.IsRed(node.Right) && this.IsRed(node.Left))
         {
-           this.FlipColors(node);
+            node = this.FlipColors(node);
         }
 
         node.Count = 1 + this.Count(node.Left) + this.Count(node.Right);
@@ -351,15 +351,17 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
             return false;
         }
 
-        return node.Color == Red;
+        return node.Color;
 
     }
 
-    private void FlipColors(Node node)
+    private Node FlipColors(Node node)
     {
         node.Color = Red;
         node.Left.Color = Black;
         node.Right.Color = Black;
+
+        return node;
     }
 
     private Node RotateLeft(Node node)
@@ -394,7 +396,7 @@ public class RedBlackTree<T> : IBinarySearchTree<T> where T : IComparable
 
     private class Node
     {
-        public Node(T value, bool color)
+        public Node(T value, bool color = Red)
         {
             this.Value = value;
             this.Color = color;
