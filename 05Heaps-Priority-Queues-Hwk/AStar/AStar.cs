@@ -55,17 +55,17 @@ public class AStar
                 break;
             }
 
-            List<Node> neighbors = this.GetNeighbors(current);
-            var newCost = cost[current] + 1;
+            var neighbors = this.GetNeighbors(current);
 
-            foreach (var node in neighbors)
+            var newCost = cost[current] + 1;
+            foreach (var neighbor in neighbors)
             {
-                if (!cost.ContainsKey(node) || newCost < cost[node])
+                if (!cost.ContainsKey(neighbor) || newCost < cost[neighbor])
                 {
-                    node.F = newCost + GetH(node, goal);
-                    parent[node] = current;
-                    cost[node] = newCost;
-                    pQueue.Enqueue(node);
+                    neighbor.F = newCost + GetH(neighbor, goal);
+                    parent[neighbor] = current;
+                    cost[neighbor] = newCost;
+                    pQueue.Enqueue(neighbor);
                 }
             }
 
@@ -73,32 +73,31 @@ public class AStar
 
         //  You can reconstruct the path following PARENT[goal] to the starting node. If there is no path to the goal PARENT[goal] won't be in the dictionary.
 
-        Stack<Node> result = ReconstructPath(start, goal, parent);
+        return this.ReconstructPath(start, goal, parent);
 
-        return result;
     }
 
-    private static Stack<Node> ReconstructPath(Node start, Node goal, Dictionary<Node, Node> parent)
+    private IEnumerable<Node> ReconstructPath(Node start, Node goal, Dictionary<Node, Node> parent)
     {
-        var result = new Stack<Node>();
-
+        var current = goal;
+        var path = new Stack<Node>();
         if (!parent.ContainsKey(goal))
         {
-            result.Push(start);
-            return result;
+            path.Push(start);
+            return path;
         }
-        
-        result.Push(goal);
-        var current = parent[goal];
 
-        while (!current.Equals(start) )
+        while (current != null)
         {
-            result.Push(current);
+            path.Push(current);
             current = parent[current];
+            if (current == null)
+            {
+                break;
+            }
         }
 
-        result.Push(current);
-        return result;
+        return path;
     }
 
     private List<Node> GetNeighbors(Node current)
