@@ -71,7 +71,7 @@ public class AStar
 
         }
 
-        //    You can reconstruct the path following PARENT[goal] to the starting node. If there is no path to the goal PARENT[goal] won't be in the dictionary.
+        //  You can reconstruct the path following PARENT[goal] to the starting node. If there is no path to the goal PARENT[goal] won't be in the dictionary.
 
         Stack<Node> result = ReconstructPath(start, goal, parent);
 
@@ -82,24 +82,22 @@ public class AStar
     {
         var result = new Stack<Node>();
 
-        if (parent.ContainsKey(goal))
-        {
-            result.Push(goal);
-            var current = parent[goal];
-
-            while (current != start && current != null)
-            {
-                result.Push(current);
-                current = parent[current];
-            }
-
-            result.Push(current);
-        }
-        else
+        if (!parent.ContainsKey(goal))
         {
             result.Push(start);
+            return result;
+        }
+        
+        result.Push(goal);
+        var current = parent[goal];
+
+        while (!current.Equals(start) )
+        {
+            result.Push(current);
+            current = parent[current];
         }
 
+        result.Push(current);
         return result;
     }
 
