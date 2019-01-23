@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class AStar
 {
-    private char[,] map;
+    private char[,] maze;
 
-    public AStar(char[,] map)
+    public AStar(char[,] maze)
     {
-        this.map = map;
+        this.maze = maze;
     }
 
     public static int GetH(Node current, Node goal)
@@ -20,14 +20,6 @@ public class AStar
 
     public IEnumerable<Node> GetPath(Node start, Node goal)
     {
-        // A* Pseudocode
-        //We need some way to store to cost to a given node and the node that we are coming from.
-        //pQueue = priority queue containing START
-        //PARENT = dictionary storing the node from which we have reached a node (following a path)
-        // COST = dictionary storing cost from the start to a node (following a path)
-        // 	PARENT[START] = null
-        //	COST[START] = 0
-
         var pQueue = new PriorityQueue<Node>();
         var parent = new Dictionary<Node, Node>();
         var cost = new Dictionary<Node, int>();
@@ -35,17 +27,6 @@ public class AStar
         pQueue.Enqueue(start);
         parent[start] = null;
         cost[start] = 0;
-
-        //while pQueue is not empty:
-        //current = remove highest priority item from pQueue
-        //if current is the goal  break
-        //for each neighbor of current (up, right, down, left):
-        //    	new cost = COST[current] + 1 
-        //if neighbor is not in COST or new cost < COST[neighbor]
-        //•	COST[neighbor] = new cost
-        //•	neighbor.F = new cost + HCost(neighbor, goal)
-        //    •	pQueue  neighbor
-        //•	PARENT[neighbor] = current
 
         while (pQueue.Count > 0)
         {
@@ -70,8 +51,6 @@ public class AStar
             }
 
         }
-
-        //  You can reconstruct the path following PARENT[goal] to the starting node. If there is no path to the goal PARENT[goal] won't be in the dictionary.
 
         return this.ReconstructPath(start, goal, parent);
 
@@ -130,13 +109,13 @@ public class AStar
 
     private bool IsInBound(int row, int col)
     {
-        return (row >= 0 && row < this.map.GetLength(0))
-               && (col >= 0 && col < this.map.GetLength(1));
+        return (row >= 0 && row < this.maze.GetLength(0))
+               && (col >= 0 && col < this.maze.GetLength(1));
     }
 
     private bool IsWall(int row, int col)
     {
-        return this.map[row, col] == 'W';
+        return this.maze[row, col] == 'W';
     }
 
 }
