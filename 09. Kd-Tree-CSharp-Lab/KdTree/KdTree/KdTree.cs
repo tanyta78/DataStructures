@@ -16,22 +16,53 @@ public class KdTree
         public Node Right { get; set; }
     }
 
-    public Node Root
-    {
-        get
-        {
-            return this.root;
-        }
-    }
+    public Node Root => this.root;
 
     public bool Contains(Point2D point)
     {
-        throw new NotImplementedException();
+        var current = this.root;
+
+
+        return current != null;
     }
 
     public void Insert(Point2D point)
     {
-        throw new NotImplementedException();
+        this.root = this.Insert(this.root, point, 0);
+    }
+
+    private Node Insert(Node node, Point2D point, int depth)
+    {
+        if (node == null)
+        {
+            return new Node(point);
+        }
+
+        var result = this.ComparePoints(point, node.Point, depth);
+
+        if (result > 0)
+        {
+            node.Left = this.Insert(node.Left, point, depth + 1);
+        }
+        else if (result <= 0)
+        {
+            node.Right = this.Insert(node.Right, point, depth + 1);
+        }
+
+        return node;
+    }
+
+    private int ComparePoints(Point2D pointA, Point2D pointB, int depth)
+    {
+        int compare = depth % 2;
+        if (compare == 0)
+        {
+            return pointB.X.CompareTo(pointA.X);
+        }
+        else
+        {
+            return pointB.Y.CompareTo(pointA.Y);
+        }
     }
 
     public void EachInOrder(Action<Point2D> action)
