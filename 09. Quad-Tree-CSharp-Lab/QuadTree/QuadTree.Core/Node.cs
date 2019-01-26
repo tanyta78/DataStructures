@@ -19,10 +19,7 @@ public class Node<T>
 
     public bool ShouldSplit
     {
-        get
-        {
-            throw new NotImplementedException();
-        }
+        get { return this.Items.Count == MaxItemCount && this.Children==null; }
     }
 
     public override string ToString()
