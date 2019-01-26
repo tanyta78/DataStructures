@@ -20,10 +20,29 @@ public class KdTree
 
     public bool Contains(Point2D point)
     {
-        var current = this.root;
+        var node = this.Search(this.root, point, 0);
 
+        return node != null;
+    }
 
-        return current != null;
+    private Node Search(Node node, Point2D point, int depth)
+    {
+        if (node == null)
+        {
+            return null;
+        }
+
+        int result = this.ComparePoints(point, node.Point, depth);
+        if (result > 0)
+        {
+            return this.Search(node.Left, point, depth + 1);
+        }
+        else if (result < 0)
+        {
+            return this.Search(node.Right, point, depth + 1);
+        }
+
+        return node;
     }
 
     public void Insert(Point2D point)
