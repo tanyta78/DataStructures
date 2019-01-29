@@ -1,11 +1,31 @@
 ﻿using System;
+using Hash_Table;
 
 class Example
 {
     static void Main()
     {
+        //HashSet examples
+        Console.WriteLine($"HASH SET EXAMPLES ");
+        Console.WriteLine("==========================");
+        var set = new HashSet<int>() { 1, 2, 3, 4, 5, 6 };
+        var second = new HashSet<int>() { 3, 4, 5, 6, 7 };
+
+        var unionResult = set.UnionWith(second);
+        Console.WriteLine("Union:" + string.Join(",", unionResult));
+        Console.WriteLine("--------------------");
+
+        var intersectResult = set.IntersectsWith(second);
+        Console.WriteLine("Intersects:" + string.Join(",",  intersectResult));
+        Console.WriteLine("--------------------");
+
+
+
+        //HashTable examples
+        Console.WriteLine($"HASH TABLE EXAMPLES ");
+        Console.WriteLine("==========================");
         HashTable<string, int> grades = new HashTable<string, int>();
-        
+
         Console.WriteLine("Grades:" + string.Join(",", grades));
         Console.WriteLine("--------------------");
 
