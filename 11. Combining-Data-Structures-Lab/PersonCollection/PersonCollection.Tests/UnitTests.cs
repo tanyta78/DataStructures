@@ -1,52 +1,61 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
 public class UnitTestsPersonCollection
 {
+    private IPersonCollection persons;
+
+    [TestInitialize]
+    public void TestInitialize()
+    {
+        this.persons = new PersonCollection();
+        //this.persons = new PersonCollectionSlow();
+    }
+
     [TestMethod]
     public void AddPerson_ShouldWorkCorrectly()
     {
         // Arrange
-        var persons = new PersonCollection();
+
 
         // Act
         var isAdded =
-            persons.AddPerson("pesho@gmail.com", "Peter", 18, "Sofia");
+            this.persons.AddPerson("pesho@gmail.com", "Peter", 18, "Sofia");
 
         // Assert
         Assert.IsTrue(isAdded);
-        Assert.AreEqual(1, persons.Count);
+        Assert.AreEqual(1, this.persons.Count);
     }
 
     [TestMethod]
     public void AddPerson_DuplicatedEmail_ShouldWorkCorrectly()
     {
         // Arrange
-        var persons = new PersonCollection();
+
 
         // Act
         var isAddedFirst =
-            persons.AddPerson("pesho@gmail.com", "Peter", 18, "Sofia");
+            this.persons.AddPerson("pesho@gmail.com", "Peter", 18, "Sofia");
         var isAddedSecond =
-            persons.AddPerson("pesho@gmail.com", "Maria", 24, "Plovdiv");
+            this.persons.AddPerson("pesho@gmail.com", "Maria", 24, "Plovdiv");
 
         // Assert
         Assert.IsTrue(isAddedFirst);
         Assert.IsFalse(isAddedSecond);
-        Assert.AreEqual(1, persons.Count);
+        Assert.AreEqual(1, this.persons.Count);
     }
 
     [TestMethod]
     public void FindPerson_ExistingPerson_ShouldReturnPerson()
     {
         // Arrange
-        var persons = new PersonCollection();
 
-        persons.AddPerson("pesho@gmail.com", "Peter", 28, "Plovdiv");
+
+        this.persons.AddPerson("pesho@gmail.com", "Peter", 28, "Plovdiv");
 
         // Act
-        var person = persons.FindPerson("pesho@gmail.com");
+        var person = this.persons.FindPerson("pesho@gmail.com");
 
         // Assert
         Assert.IsNotNull(person);
@@ -56,10 +65,10 @@ public class UnitTestsPersonCollection
     public void FindPerson_NonExistingPerson_ShouldReturnNothing()
     {
         // Arrange
-        var persons = new PersonCollection();
+
 
         // Act
-        var person = persons.FindPerson("pesho@gmail.com");
+        var person = this.persons.FindPerson("pesho@gmail.com");
 
         // Assert
         Assert.IsNull(person);
@@ -69,36 +78,36 @@ public class UnitTestsPersonCollection
     public void DeletePerson_ShouldWorkCorrectly()
     {
         // Arrange
-        var persons = new PersonCollection();
-        persons.AddPerson("pesho@gmail.com", "Peter", 28, "Plovdiv");
+
+        this.persons.AddPerson("pesho@gmail.com", "Peter", 28, "Plovdiv");
 
         // Act
         var isDeletedExisting =
-            persons.DeletePerson("pesho@gmail.com");
+            this.persons.DeletePerson("pesho@gmail.com");
         var isDeletedNonExisting =
-            persons.DeletePerson("pesho@gmail.com");
+            this.persons.DeletePerson("pesho@gmail.com");
 
         // Assert
         Assert.IsTrue(isDeletedExisting);
         Assert.IsFalse(isDeletedNonExisting);
-        Assert.AreEqual(0, persons.Count);
+        Assert.AreEqual(0, this.persons.Count);
     }
 
     [TestMethod]
     public void FindPersonsByEmailDomain_ShouldReturnMatchingPersons()
     {
         // Arrange
-        var persons = new PersonCollection();
 
-        persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
-        persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Sofia");
-        persons.AddPerson("mary@gmail.com", "Maria", 21, "Plovdiv");
-        persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
+
+        this.persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
+        this.persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Sofia");
+        this.persons.AddPerson("mary@gmail.com", "Maria", 21, "Plovdiv");
+        this.persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
 
         // Act
-        var personsGmail = persons.FindPersons("gmail.com");
-        var personsYahoo = persons.FindPersons("yahoo.co.uk");
-        var personsHoo = persons.FindPersons("hoo.co.uk");
+        var personsGmail = this.persons.FindPersons("gmail.com");
+        var personsYahoo = this.persons.FindPersons("yahoo.co.uk");
+        var personsHoo = this.persons.FindPersons("hoo.co.uk");
 
         // Assert
         CollectionAssert.AreEqual(
@@ -116,18 +125,18 @@ public class UnitTestsPersonCollection
     public void FindPersonsByNameAndTown_ShouldReturnMatchingPersons()
     {
         // Arrange
-        var persons = new PersonCollection();
-        persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
-        persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Sofia");
-        persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
-        persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
-        persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
+
+        this.persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
+        this.persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Sofia");
+        this.persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
+        this.persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
+        this.persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
 
         // Act
-        var personsPeshoPlovdiv = persons.FindPersons("Pesho", "Plovdiv");
-        var personsLowercase = persons.FindPersons("pesho", "plovdiv");
-        var personsPeshoNoTown = persons.FindPersons("Pesho", null);
-        var personsAnnaBourgas = persons.FindPersons("Anna", "Bourgas");
+        var personsPeshoPlovdiv = this.persons.FindPersons("Pesho", "Plovdiv");
+        var personsLowercase = this.persons.FindPersons("pesho", "plovdiv");
+        var personsPeshoNoTown = this.persons.FindPersons("Pesho", null);
+        var personsAnnaBourgas = this.persons.FindPersons("Anna", "Bourgas");
 
         // Assert
         CollectionAssert.AreEqual(
@@ -148,20 +157,20 @@ public class UnitTestsPersonCollection
     public void FindPersonsByAgeRange_ShouldReturnMatchingPersons()
     {
         // Arrange
-        var persons = new PersonCollection();
-        persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
-        persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Sofia");
-        persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
-        persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
-        persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
-        persons.AddPerson("asen@gmail.com", "Asen", 21, "Rousse");
+
+        this.persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
+        this.persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Sofia");
+        this.persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
+        this.persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
+        this.persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
+        this.persons.AddPerson("asen@gmail.com", "Asen", 21, "Rousse");
 
         // Act
-        var personsAgedFrom21to22 = persons.FindPersons(21, 22);
-        var personsAgedFrom10to11 = persons.FindPersons(10, 11);
-        var personsAged21 = persons.FindPersons(21, 21);
-        var personsAged19 = persons.FindPersons(19, 19);
-        var personsAgedFrom0to1000 = persons.FindPersons(0, 1000);
+        var personsAgedFrom21to22 = this.persons.FindPersons(21, 22);
+        var personsAgedFrom10to11 = this.persons.FindPersons(10, 11);
+        var personsAged21 = this.persons.FindPersons(21, 21);
+        var personsAged19 = this.persons.FindPersons(19, 19);
+        var personsAgedFrom0to1000 = this.persons.FindPersons(0, 1000);
 
         // Assert
         CollectionAssert.AreEqual(
@@ -185,24 +194,24 @@ public class UnitTestsPersonCollection
     public void FindPersonsByAgeRangeAndTown_ShouldReturnMatchingPersons()
     {
         // Arrange
-        var persons = new PersonCollection();
-        persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
-        persons.AddPerson("kirosofia@yahoo.co.uk", "Kiril", 22, "Sofia");
-        persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Plovdiv");
-        persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
-        persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
-        persons.AddPerson("ani17@gmail.com", "Anna", 17, "Bourgas");
-        persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
-        persons.AddPerson("asen.rousse@gmail.com", "Asen", 21, "Rousse");
-        persons.AddPerson("asen@gmail.com", "Asen", 21, "Plovdiv");
+
+        this.persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
+        this.persons.AddPerson("kirosofia@yahoo.co.uk", "Kiril", 22, "Sofia");
+        this.persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Plovdiv");
+        this.persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
+        this.persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
+        this.persons.AddPerson("ani17@gmail.com", "Anna", 17, "Bourgas");
+        this.persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
+        this.persons.AddPerson("asen.rousse@gmail.com", "Asen", 21, "Rousse");
+        this.persons.AddPerson("asen@gmail.com", "Asen", 21, "Plovdiv");
 
         // Act
-        var personsAgedFrom21to22Plovdiv = persons.FindPersons(21, 22, "Plovdiv");
-        var personsAgedFrom10to11Sofia = persons.FindPersons(10, 11, "Sofia");
-        var personsAged21Plovdiv = persons.FindPersons(21, 21, "Plovdiv");
-        var personsAged19Bourgas = persons.FindPersons(19, 19, "Bourgas");
-        var personsAgedFrom0to1000Plovdiv = persons.FindPersons(0, 1000, "Plovdiv");
-        var personsAgedFrom0to1000NewYork = persons.FindPersons(0, 1000, "New York");
+        var personsAgedFrom21to22Plovdiv = this.persons.FindPersons(21, 22, "Plovdiv");
+        var personsAgedFrom10to11Sofia = this.persons.FindPersons(10, 11, "Sofia");
+        var personsAged21Plovdiv = this.persons.FindPersons(21, 21, "Plovdiv");
+        var personsAged19Bourgas = this.persons.FindPersons(19, 19, "Bourgas");
+        var personsAgedFrom0to1000Plovdiv = this.persons.FindPersons(0, 1000, "Plovdiv");
+        var personsAgedFrom0to1000NewYork = this.persons.FindPersons(0, 1000, "New York");
 
         // Assert
         CollectionAssert.AreEqual(
@@ -229,40 +238,40 @@ public class UnitTestsPersonCollection
     public void FindDeletedPersons_ShouldReturnEmptyCollection()
     {
         // Arrange
-        var persons = new PersonCollection();
-        persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
-        persons.AddPerson("kirosofia@yahoo.co.uk", "Kiril", 22, "Sofia");
-        persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Plovdiv");
-        persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
-        persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
-        persons.AddPerson("ani17@gmail.com", "Anna", 17, "Bourgas");
-        persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
-        persons.AddPerson("asen.rousse@gmail.com", "Asen", 21, "Rousse");
-        persons.AddPerson("asen@gmail.com", "Asen", 21, "Plovdiv");
 
-        persons.DeletePerson("pesho@gmail.com");
-        persons.DeletePerson("kirosofia@yahoo.co.uk");
-        persons.DeletePerson("kiro@yahoo.co.uk");
-        persons.DeletePerson("pepi@gmail.com");
-        persons.DeletePerson("ani@gmail.com");
-        persons.DeletePerson("ani17@gmail.com");
-        persons.DeletePerson("pepi2@yahoo.fr");
-        persons.DeletePerson("asen.rousse@gmail.com");
-        persons.DeletePerson("asen@gmail.com");
+        this.persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
+        this.persons.AddPerson("kirosofia@yahoo.co.uk", "Kiril", 22, "Sofia");
+        this.persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Plovdiv");
+        this.persons.AddPerson("pepi@gmail.com", "Pesho", 21, "Plovdiv");
+        this.persons.AddPerson("ani@gmail.com", "Anna", 19, "Bourgas");
+        this.persons.AddPerson("ani17@gmail.com", "Anna", 17, "Bourgas");
+        this.persons.AddPerson("pepi2@yahoo.fr", "Pesho", 21, "Plovdiv");
+        this.persons.AddPerson("asen.rousse@gmail.com", "Asen", 21, "Rousse");
+        this.persons.AddPerson("asen@gmail.com", "Asen", 21, "Plovdiv");
+
+        this.persons.DeletePerson("pesho@gmail.com");
+        this.persons.DeletePerson("kirosofia@yahoo.co.uk");
+        this.persons.DeletePerson("kiro@yahoo.co.uk");
+        this.persons.DeletePerson("pepi@gmail.com");
+        this.persons.DeletePerson("ani@gmail.com");
+        this.persons.DeletePerson("ani17@gmail.com");
+        this.persons.DeletePerson("pepi2@yahoo.fr");
+        this.persons.DeletePerson("asen.rousse@gmail.com");
+        this.persons.DeletePerson("asen@gmail.com");
 
         // Act
-        var personPeshoGmail = persons.FindPerson("pesho@gmail.com");
+        var personPeshoGmail = this.persons.FindPerson("pesho@gmail.com");
 
-        var personsGmail = persons.FindPersons("gmail.com");
-        var personsYahoo = persons.FindPersons("yahoo.co.uk");
+        var personsGmail = this.persons.FindPersons("gmail.com");
+        var personsYahoo = this.persons.FindPersons("yahoo.co.uk");
 
-        var personsPeshoPlovdiv = persons.FindPersons("Pesho", "Plovdiv");
+        var personsPeshoPlovdiv = this.persons.FindPersons("Pesho", "Plovdiv");
 
-        var personsAgedFrom21to22 = persons.FindPersons(21, 22);
-        var personsAgedFrom0to1000 = persons.FindPersons(0, 1000);
+        var personsAgedFrom21to22 = this.persons.FindPersons(21, 22);
+        var personsAgedFrom0to1000 = this.persons.FindPersons(0, 1000);
 
-        var personsAgedFrom21to22Plovdiv = persons.FindPersons(21, 22, "Plovdiv");
-        var personsAged19Bourgas = persons.FindPersons(19, 19, "Bourgas");
+        var personsAgedFrom21to22Plovdiv = this.persons.FindPersons(21, 22, "Plovdiv");
+        var personsAged19Bourgas = this.persons.FindPersons(19, 19, "Bourgas");
 
         // Assert
         Assert.AreEqual(null, personPeshoGmail);
@@ -282,89 +291,88 @@ public class UnitTestsPersonCollection
     [TestMethod]
     public void MultipleOperations_ShouldReturnWorkCorrectly()
     {
-        var persons = new PersonCollection();
 
-        var isAdded = persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
+        var isAdded = this.persons.AddPerson("pesho@gmail.com", "Pesho", 28, "Plovdiv");
         Assert.IsTrue(isAdded);
-        Assert.AreEqual(1, persons.Count);
+        Assert.AreEqual(1, this.persons.Count);
 
-        isAdded = persons.AddPerson("pesho@gmail.com", "Pesho2", 222, "Plovdiv222");
+        isAdded = this.persons.AddPerson("pesho@gmail.com", "Pesho2", 222, "Plovdiv222");
         Assert.IsFalse(isAdded);
-        Assert.AreEqual(1, persons.Count);
+        Assert.AreEqual(1, this.persons.Count);
 
-        persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Plovdiv");
-        Assert.AreEqual(2, persons.Count);
+        this.persons.AddPerson("kiro@yahoo.co.uk", "Kiril", 22, "Plovdiv");
+        Assert.AreEqual(2, this.persons.Count);
 
-        persons.AddPerson("asen@gmail.com", "Asen", 22, "Sofia");
-        Assert.AreEqual(3, persons.Count);
+        this.persons.AddPerson("asen@gmail.com", "Asen", 22, "Sofia");
+        Assert.AreEqual(3, this.persons.Count);
 
-        Person person = persons.FindPerson("non-existing person");
+        Person person = this.persons.FindPerson("non-existing person");
         Assert.IsNull(person);
 
-        person = persons.FindPerson("pesho@gmail.com");
+        person = this.persons.FindPerson("pesho@gmail.com");
         Assert.IsNotNull(person);
         Assert.AreEqual("pesho@gmail.com", person.Email);
         Assert.AreEqual("Pesho", person.Name);
         Assert.AreEqual(28, person.Age);
         Assert.AreEqual("Plovdiv", person.Town);
 
-        var personsGmail = persons.FindPersons("gmail.com");
+        var personsGmail = this.persons.FindPersons("gmail.com");
         CollectionAssert.AreEqual(
             new string[] { "asen@gmail.com", "pesho@gmail.com" },
             personsGmail.Select(p => p.Email).ToList());
 
-        var personsPeshoPlovdiv = persons.FindPersons("Pesho", "Plovdiv");
+        var personsPeshoPlovdiv = this.persons.FindPersons("Pesho", "Plovdiv");
         CollectionAssert.AreEqual(
             new string[] { "pesho@gmail.com" },
             personsPeshoPlovdiv.Select(p => p.Email).ToList());
 
-        var personsPeshoSofia = persons.FindPersons("Pesho", "Sofia");
+        var personsPeshoSofia = this.persons.FindPersons("Pesho", "Sofia");
         Assert.AreEqual(0, personsPeshoSofia.Count());
 
-        var personsKiroPlovdiv = persons.FindPersons("Kiro", "Plovdiv");
+        var personsKiroPlovdiv = this.persons.FindPersons("Kiro", "Plovdiv");
         Assert.AreEqual(0, personsKiroPlovdiv.Count());
 
-        var personsAge22To28 = persons.FindPersons(22, 28);
+        var personsAge22To28 = this.persons.FindPersons(22, 28);
         CollectionAssert.AreEqual(
             new string[] { "asen@gmail.com", "kiro@yahoo.co.uk", "pesho@gmail.com" },
             personsAge22To28.Select(p => p.Email).ToList());
 
-        var personsAge22To28Plovdiv = persons.FindPersons(22, 28, "Plovdiv");
+        var personsAge22To28Plovdiv = this.persons.FindPersons(22, 28, "Plovdiv");
         CollectionAssert.AreEqual(
             new string[] { "kiro@yahoo.co.uk", "pesho@gmail.com" },
             personsAge22To28Plovdiv.Select(p => p.Email).ToList());
 
-        var isDeleted = persons.DeletePerson("pesho@gmail.com");
+        var isDeleted = this.persons.DeletePerson("pesho@gmail.com");
         Assert.IsTrue(isDeleted);
 
-        isDeleted = persons.DeletePerson("pesho@gmail.com");
+        isDeleted = this.persons.DeletePerson("pesho@gmail.com");
         Assert.IsFalse(isDeleted);
 
-        person = persons.FindPerson("pesho@gmail.com");
+        person = this.persons.FindPerson("pesho@gmail.com");
         Assert.IsNull(person);
 
-        personsGmail = persons.FindPersons("gmail.com");
+        personsGmail = this.persons.FindPersons("gmail.com");
         CollectionAssert.AreEqual(
             new string[] { "asen@gmail.com" },
             personsGmail.Select(p => p.Email).ToList());
 
-        personsPeshoPlovdiv = persons.FindPersons("Pesho", "Plovdiv");
+        personsPeshoPlovdiv = this.persons.FindPersons("Pesho", "Plovdiv");
         CollectionAssert.AreEqual(
             new string[] { },
             personsPeshoPlovdiv.Select(p => p.Email).ToList());
 
-        personsPeshoSofia = persons.FindPersons("Pesho", "Sofia");
+        personsPeshoSofia = this.persons.FindPersons("Pesho", "Sofia");
         Assert.AreEqual(0, personsPeshoSofia.Count());
 
-        personsKiroPlovdiv = persons.FindPersons("Kiro", "Plovdiv");
+        personsKiroPlovdiv = this.persons.FindPersons("Kiro", "Plovdiv");
         Assert.AreEqual(0, personsKiroPlovdiv.Count());
 
-        personsAge22To28 = persons.FindPersons(22, 28);
+        personsAge22To28 = this.persons.FindPersons(22, 28);
         CollectionAssert.AreEqual(
             new string[] { "asen@gmail.com", "kiro@yahoo.co.uk" },
             personsAge22To28.Select(p => p.Email).ToList());
 
-        personsAge22To28Plovdiv = persons.FindPersons(22, 28, "Plovdiv");
+        personsAge22To28Plovdiv = this.persons.FindPersons(22, 28, "Plovdiv");
         CollectionAssert.AreEqual(
             new string[] { "kiro@yahoo.co.uk" },
             personsAge22To28Plovdiv.Select(p => p.Email).ToList());
